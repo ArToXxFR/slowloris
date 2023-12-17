@@ -1,6 +1,13 @@
 use std::io::Write;
-use std::net::{IpAddr, Ipv4Addr, SocketAddr, TcpStream};
+use std::net::{IpAddr, SocketAddr, TcpStream};
 use rand::random;
+use clap::Parser;
+
+#[derive(Parser)]
+struct Cli {
+    ip: IpAddr,
+    port: u16,
+}
 
 struct Socket {
     ip: IpAddr,
@@ -36,9 +43,11 @@ fn main () {
 
     println!("Création des sockets...");
 
+    let args = Cli::parse();
+
     let instance = Socket {
-        ip: IpAddr::V4(Ipv4Addr::new(192, 168, 1, 14)),
-        port: 80
+        ip: args.ip,
+        port: args.port
     };
 
     let mut sockets: Vec<TcpStream> = instance.create(nb_sockets);
