@@ -13,7 +13,7 @@ struct Cli {
     // Port targeted
     port: u16,
     // Number of workers
-    #[arg(short, long, default_value_t = 500, help="Specify the number of workers")]
+    #[arg(short, long, default_value_t = 500, help="Specify the number of workers.")]
     workers: u16,
 }
 
