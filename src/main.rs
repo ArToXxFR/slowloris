@@ -36,7 +36,7 @@ impl Worker {
             .expect("Impossible to connect to the target.");
         s.write_all(
             format!(
-                "GET /?{} HTTP/1.1\r\nHost: 127.0.0.1\r\nUser-Agent: {}\r\nConnection: keep-alive\r\n",
+                "GET /?{} HTTP/1.1\r\nUser-Agent: {}\r\nConnection: keep-alive\r\n",
                 random::<i8>(),
                 random_agent()
             ).as_bytes(),
